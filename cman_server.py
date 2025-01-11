@@ -118,10 +118,7 @@ def handle_move_request(client_addr, direction):
             game.state = State.PLAY
         send_update_to_all()
         return 
-    else:
-        # send error message
-        send_message(client_addr, bytes([0xFF, 0x02]))  # Error opcode, code 0x01 (invalid move)
-        print(f"invalid move by {client_addr}")
+
     
     
 def handle_exit_request(client_addr):

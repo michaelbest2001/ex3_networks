@@ -70,7 +70,6 @@ def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts,
     """
     # Copy the map to update without modifying the original
     updated_map = [list(line) for line in map_data]
-    print('collected', collected)
     # Update collected points
     rows, cols = len(updated_map), len(updated_map[0])
     
@@ -88,11 +87,11 @@ def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts,
     if c_coords != (0xFF, 0xFF):  # Check if Cman is active
         updated_map[c_coords[0]][c_coords[1]] = CMAN_CHAR
     else:
-        print('cman not active')
+        #print('cman not active')
     if s_coords != (0xFF, 0xFF):  # Check if Spirit is active
         updated_map[s_coords[0]][s_coords[1]] = SPIRIT_CHAR
     else:
-        print('spirit not active')
+        #print('spirit not active')
     
     # replace free space with ' '
     for i in range(len(updated_map)):
@@ -112,7 +111,7 @@ def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts,
     # Print the game status
     print("\nGame Status:")
     print(f"You are playing as: {role}")
-    print(f"  Freeze: {'Yes' if freeze else 'No'}")
+    print(f"  Freeze: {'No' if freeze else 'Yes'}")
     print(f"  Cman Caught Attempts: {attempts}")
     remaining_points = collected.count(0)
     print(f"  Remaining Points: {remaining_points}\n")
@@ -139,7 +138,7 @@ def main():
                 # Receive a message from the server
                 data, addr = client_socket.recvfrom(1024)
                 opcode = data[0]
-                print(f"Received message with opcode {opcode}")
+                #print(f"Received message with opcode {opcode}")
                 
                 # Handle game state update
                 if opcode == 0x80:  # Game state update (0x80)
@@ -171,8 +170,6 @@ def main():
                         print("waiting for players")
                     elif error_code == 0x01:
                         print("Spirit cannot move yet, CMAN has to move first.")
-                    elif error_code == 0x02:
-                        print("Invalid move, please try again.")
                     elif error_code == 0x03:
                         print("CMAN already taken.")
                         exit(1)
