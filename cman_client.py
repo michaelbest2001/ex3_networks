@@ -122,6 +122,9 @@ def main():
             if ready == client_socket:
                 # Receive a message from the server
                 data, addr = client_socket.recvfrom(1024)
+                if addr != (addr_server, SERVER_PORT):
+                    print(f"Received message from unknown address {addr}. Ignoring.")
+                    continue
                 opcode = data[0]
                 #print(f"Received message with opcode {opcode}")
                 
@@ -191,7 +194,7 @@ if __name__ == "__main__":
     # get args from command line
     try :
         role = sys.argv[1]
-        addr = sys.argv[2]
+        addr_server = sys.argv[2]
     except ValueError:
         print("Invalid command line arguments. Exiting.")
         sys.exit(1)
