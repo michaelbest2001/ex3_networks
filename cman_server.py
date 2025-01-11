@@ -138,6 +138,15 @@ def handle_exit_request(client_addr):
     else:
         send_message(client_addr, bytes([0xFF, 0x03]))  # Error opcode, code 0x03 (not in game)
 
+def flush_socket(socket):
+    """Flush the socket of all messages."""
+    while True:
+        try:
+            socket.recv(1024)
+        except BlockingIOError:
+            break
+
+
 def main():
     global game, server_socket, clients
     # UDP server socket setup
@@ -192,10 +201,10 @@ def main():
             send_update_to_all()
             send_message_to_all(bytes([0x8F, winner_byte, s_score, c_score]))  # Game end message
             time.sleep(10)  # Wait for a few seconds before restarting
+            flush_socket(server_socket)
             clients.clear()
             game.restart_game()  # Restart the game after a winner is declared
-
-            send_message_to_all(bytes([0x80, 0x00]))  # Game restart
+            print("Game restarted, waiting for clients...")
 
 if __name__ == "__main__":
     # get port from args of given
