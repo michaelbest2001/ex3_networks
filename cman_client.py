@@ -78,7 +78,8 @@ def update_and_print_map(map_data, freeze, c_coords, s_coords, attempts, collect
         for c in range(cols):
             if updated_map[r][c] == POINT_CHAR:
                 if collected[point_index]:
-                    updated_map[r][c] = FREE_CHAR
+                    updated_map[r][c] = '%'
+                    
                     print('point collected')
                 point_index += 1
             if updated_map[r][c] in {CMAN_CHAR, SPIRIT_CHAR}:
@@ -87,13 +88,20 @@ def update_and_print_map(map_data, freeze, c_coords, s_coords, attempts, collect
     # Update player positions
     if c_coords != (0xFF, 0xFF):  # Check if Cman is active
         updated_map[c_coords[0]][c_coords[1]] = CMAN_CHAR
+    else:
+        print('cman not active')
+        updated_map[c_coords[0]][c_coords[1]] = FREE_CHAR
     if s_coords != (0xFF, 0xFF):  # Check if Spirit is active
         updated_map[s_coords[0]][s_coords[1]] = SPIRIT_CHAR
+    else:
+        updated_map[s_coords[0]][s_coords[1]] = FREE_CHAR
+        print('spirit not active')
     
     # replace free space with ' '
     for i in range(len(updated_map)):
         updated_map[i] = [x if x != FREE_CHAR else ' ' for x in updated_map[i]]
         updated_map[i] = [x if x != WALL_CHAR else '#' for x in updated_map[i]]
+        
   
     
     # Print the updated map
@@ -106,6 +114,7 @@ def update_and_print_map(map_data, freeze, c_coords, s_coords, attempts, collect
 
     # Print the game status
     print("\nGame Status:")
+    print(f"You are playing as: {role}")
     print(f"  Freeze: {'Yes' if freeze else 'No'}")
     print(f"  Cman Caught Attempts: {attempts}")
     remaining_points = collected.count(0)
@@ -174,7 +183,7 @@ def main():
                     break
               
                 elif opcode == 0xFF:
-                    print("waiting for more players")
+                    print("An error occurred.")
 
     print("Game ended. Closing client.")
 

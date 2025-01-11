@@ -155,12 +155,13 @@ def main():
         # If game ends
         if game.state == State.WIN:
             winner = game.get_winner()
+            print(f"Game ended, winner: {winner}")
             c_score = MAX_ATTEMPTS - game.get_game_progress()[0]
             s_score = game.get_game_progress()[1]
-            send_message(client_addr, bytes([0x8F, winner, s_score, c_score]))  # Game end message
+            send_message_to_all(bytes([0x8F, winner, s_score, c_score]))  # Game end message
             time.sleep(10)  # Wait for a few seconds before restarting
             game.restart_game()  # Restart the game after a winner is declared
-            send_message(client_addr, bytes([0x80, 0x00]))  # Game restart
+            send_message_to_all(client_addr, bytes([0x80, 0x00]))  # Game restart
 
 if __name__ == "__main__":
     # get port from args of given
