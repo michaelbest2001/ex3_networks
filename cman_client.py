@@ -78,9 +78,8 @@ def update_and_print_map(map_data, freeze, c_coords, s_coords, attempts, collect
         for c in range(cols):
             if updated_map[r][c] == POINT_CHAR:
                 if collected[point_index]:
-                    updated_map[r][c] = '%'
-                    
-                    print('point collected')
+                    updated_map[r][c] = FREE_CHAR
+                    print(f"point at {r}, {c} is now {updated_map[r][c]}")
                 point_index += 1
             if updated_map[r][c] in {CMAN_CHAR, SPIRIT_CHAR}:
                 updated_map[r][c] = FREE_CHAR

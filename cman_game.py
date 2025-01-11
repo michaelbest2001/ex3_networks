@@ -133,7 +133,7 @@ class Game():
 		if self.state != State.WIN:
 			self.state = State.WIN
 			self.winner = player
-		return self.get_winner()
+		return self.get_winner() # changed to self.get_winner()
 
 	def can_move(self, player):
 		"""

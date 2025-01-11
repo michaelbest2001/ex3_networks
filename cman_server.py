@@ -151,6 +151,7 @@ def main():
                 print("start the game")
         # Continue to check for clients and update the game state
         if game.state != previous_state:
+            print("state changed")
             send_update_to_all()  # Game state update
         # If game ends
         if game.state == State.WIN:
@@ -161,7 +162,7 @@ def main():
             send_message_to_all(bytes([0x8F, winner, s_score, c_score]))  # Game end message
             time.sleep(10)  # Wait for a few seconds before restarting
             game.restart_game()  # Restart the game after a winner is declared
-            send_message_to_all(client_addr, bytes([0x80, 0x00]))  # Game restart
+            send_message_to_all(bytes([0x80, 0x00]))  # Game restart
 
 if __name__ == "__main__":
     # get port from args of given
