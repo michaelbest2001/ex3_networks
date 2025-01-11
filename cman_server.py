@@ -87,7 +87,8 @@ def handle_move_request(client_addr, direction):
     
     elif game.apply_move(role, direction):
         print("applyed move")
-        game.state = State.PLAY
+        if game.state == State.START:
+            game.state = State.PLAY
         send_update_to_all()
         return 
     else:
@@ -97,9 +98,10 @@ def handle_move_request(client_addr, direction):
 def handle_exit_request(client_addr):
     """Handles a client exit request."""
     if client_addr in clients:
-        role = clients.pop(client_addr)
+        role = roles[clients[client_addr]]
         if role == Player.CMAN or role == Player.SPIRIT:
             game.declare_winner(Player.SPIRIT if role == Player.CMAN else Player.CMAN)
+            print(f"Client {client_addr} exited, winner: {role}")
 
     else:
         send_message(client_addr, bytes([0xFF, 0x03]))  # Error opcode, code 0x03 (not in game)
@@ -161,7 +163,10 @@ def main():
             s_score = game.get_game_progress()[1]
             send_message_to_all(bytes([0x8F, winner, s_score, c_score]))  # Game end message
             time.sleep(10)  # Wait for a few seconds before restarting
+            clients = {}
+            
             game.restart_game()  # Restart the game after a winner is declared
+
             send_message_to_all(bytes([0x80, 0x00]))  # Game restart
 
 if __name__ == "__main__":

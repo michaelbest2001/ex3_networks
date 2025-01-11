@@ -74,15 +74,20 @@ def update_and_print_map(map_data, freeze, c_coords, s_coords, attempts, collect
     # Update collected points
     rows, cols = len(updated_map), len(updated_map[0])
     point_index = 0
+    points = []
     for r in range(rows):
         for c in range(cols):
             if updated_map[r][c] == POINT_CHAR:
-                if collected[point_index]:
-                    updated_map[r][c] = FREE_CHAR
-                    print(f"point at {r}, {c} is now {updated_map[r][c]}")
+                points.append((r, c))
+                print(f"point at {r}, {c}")
                 point_index += 1
             if updated_map[r][c] in {CMAN_CHAR, SPIRIT_CHAR}:
                 updated_map[r][c] = FREE_CHAR
+
+    points = sorted(points)
+    for i, point in enumerate(points):
+        if collected[i] == 1:
+            updated_map[point[0]][point[1]] = ' '
 
     # Update player positions
     if c_coords != (0xFF, 0xFF):  # Check if Cman is active
@@ -153,7 +158,7 @@ def main():
                 handle_move(Direction.RIGHT)
             else:
                 print("Invalid key. Use WASD to move or Q to quit.")
-        rlist, _, _ = select.select([client_socket], [], [], 1)  # 1 second timeout
+        rlist, _, _ = select.select([client_socket], [], [], 0.1)  # 1 second timeout
         
         for ready in rlist:
             if ready == client_socket:
