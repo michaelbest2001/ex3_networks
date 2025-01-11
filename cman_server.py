@@ -84,16 +84,17 @@ def handle_join_request(client_addr, role):
                 clients[client_addr] = roles[role]
                 print(f"Client {client_addr} joined as {roles[role]}")
                 send_update_to_all()
-
+    else:
+        # error message
+        send_message(client_addr, bytes([0xFF, 0x05]))
+        return
+    
     if Player.CMAN in clients.values() and Player.SPIRIT in clients.values():
             # Start the game if both roles are taken
             if game.state == State.WAIT:
                 game.state = State.START
                 print("start the game")
-    else:
-        # error message
-        send_message(client_addr, bytes([0xFF, 0x05]))
-        return
+  
     # Send the game state update to the client
 
     
