@@ -103,7 +103,6 @@ def handle_join_request(client_addr, role):
 def handle_move_request(client_addr, direction):
     """Handle a move request from a client."""
     role = clients[client_addr]
-  
 
     if game.state == State.WAIT:
         print("game is waiting")
@@ -127,7 +126,7 @@ def handle_move_request(client_addr, direction):
 def handle_exit_request(client_addr):
     """Handles a client exit request."""
     if client_addr in clients.keys():
-        role = roles[clients[client_addr]]
+        role = clients[client_addr]
         print(f"in exit request, role: {role}")
 
         if role == Player.CMAN or role == Player.SPIRIT:
