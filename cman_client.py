@@ -92,6 +92,8 @@ def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts,
     
     # Print the game status
     print("\nGame Status:")
+    if c_coords == (0xFF, 0xFF) or s_coords == (0xFF, 0xFF):
+        print("  Waiting for another player.")
     print(f"  You are playing as: {role}")
     print(f"  Freeze: {'Yes' if freeze else 'No'}")
     print(f"  Cman Caught Attempts: {attempts}")
