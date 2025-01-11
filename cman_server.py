@@ -106,7 +106,7 @@ def handle_exit_request(client_addr):
         send_message(client_addr, bytes([0xFF, 0x03]))  # Error opcode, code 0x03 (not in game)
 
 def main():
-
+    global game, server_socket, clients
     # UDP server socket setup
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind((SERVER_IP, SERVER_PORT))
