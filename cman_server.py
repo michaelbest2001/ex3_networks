@@ -27,7 +27,7 @@ def get_game_update(addr):
     c_coords = cords[Player.CMAN] if Player.CMAN in clients.values() else (0xFF, 0xFF)
     s_coords = cords[Player.SPIRIT] if Player.SPIRIT in clients.values() else (0xFF, 0xFF)
     # feeze is 0 if the player can send move requests, 1 otherwise
-    freeze = (roles[clients[addr]] != Player.NONE) and game.can_move(clients[addr])
+    freeze = (clients[addr] != Player.NONE) and game.can_move(clients[addr])
     points = game.get_points()
 
     # convert the points dict into bytes where each bit represents a point, 5 bytes for 40 points
@@ -65,6 +65,7 @@ def handle_join_request(client_addr, role):
     if role in [0,1,2]:
         if role == 0:
             clients[client_addr] = roles[role]
+            send_message(client_addr, get_game_update(client_addr))
             print(f"Client {client_addr} joined as {roles[role]}")
         if role == 1:
             if Player.CMAN in clients.values():
