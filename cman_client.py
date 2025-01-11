@@ -187,16 +187,12 @@ def main():
                 exit(0)
             if role != 'watcher':
                 if 'w' in keys:
-                    print("Moving up.")
                     handle_move(Direction.UP)
                 elif 'a' in keys:
-                    print("Moving left.")
                     handle_move(Direction.LEFT)
                 elif 's' in keys:
-                    print("Moving down.")
                     handle_move(Direction.DOWN)
                 elif 'd' in keys:
-                    print("Moving right.")
                     handle_move(Direction.RIGHT)
             else:
                 print("Watcher cannot move.")    
