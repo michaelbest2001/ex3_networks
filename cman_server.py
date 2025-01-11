@@ -16,7 +16,7 @@ game = None
 
 server_socket = None  # Server socket for communication
 # List of clients and their roles
-clients = None
+clients = {}
 roles = {0:Player.NONE, 1:Player.CMAN, 2:Player.SPIRIT}  # Keep track of CMAN and SPIRIT
 
 spectators = []
