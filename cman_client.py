@@ -137,28 +137,8 @@ def main():
     # Wait for server response
     while True:
         # Prepare the list of file descriptors to watch (socket and stdin)
-        keys = get_pressed_keys()
         
-        if keys != []:
-            if 'q' in keys:
-                print("Quitting game.")
-                handle_quit()
-                break
-            elif 'w' in keys:
-                print("Moving up.")
-                handle_move(Direction.UP)
-            elif 'a' in keys:
-                print("Moving left.")
-                handle_move(Direction.LEFT)
-            elif 's' in keys:
-                print("Moving down.")
-                handle_move(Direction.DOWN)
-            elif 'd' in keys:
-                print("Moving right.")
-                handle_move(Direction.RIGHT)
-            else:
-                print("Invalid key. Use WASD to move or Q to quit.")
-        rlist, _, _ = select.select([client_socket], [], [], 0.1)  # 1 second timeout
+        rlist, _, _ = select.select([client_socket, sys.stdin], [], [], 0.1)  # 1 second timeout
         
         for ready in rlist:
             if ready == client_socket:
@@ -188,6 +168,27 @@ def main():
               
                 elif opcode == 0xFF:
                     print("An error occurred.")
+            if ready == sys.stdin:
+                keys = get_pressed_keys()
+        
+                if keys != []:
+                    if 'q' in keys:
+                        print("Quitting game.")
+                        handle_quit()
+                        break
+                    elif 'w' in keys:
+                        print("Moving up.")
+                        handle_move(Direction.UP)
+                    elif 'a' in keys:
+                        print("Moving left.")
+                        handle_move(Direction.LEFT)
+                    elif 's' in keys:
+                        print("Moving down.")
+                        handle_move(Direction.DOWN)
+                    elif 'd' in keys:
+                        print("Moving right.")
+                        handle_move(Direction.RIGHT)
+                
 
     print("Game ended. Closing client.")
 

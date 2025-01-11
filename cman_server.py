@@ -78,7 +78,6 @@ def handle_join_request(client_addr, role):
 
 def handle_move_request(client_addr, direction):
     """Handle a move request from a client."""
-    global game
     role = clients[client_addr]
     if role == 'watcher' or not game.can_move(role):
         print("cant move")
@@ -107,10 +106,7 @@ def handle_exit_request(client_addr):
         send_message(client_addr, bytes([0xFF, 0x03]))  # Error opcode, code 0x03 (not in game)
 
 def main():
-    global game
-    global server_socket
-    global clients
-    
+
     # UDP server socket setup
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind((SERVER_IP, SERVER_PORT))
