@@ -91,25 +91,26 @@ def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts,
     for i in range(len(updated_map)):
         updated_map[i] = [x if x != FREE_CHAR else ' ' for x in updated_map[i]]
         updated_map[i] = [x if x != WALL_CHAR else '#' for x in updated_map[i]]
+        updated_map[i] = [x if x != POINT_CHAR else 'o' for x in updated_map[i]]
         
   
     
     # Print the updated map
-    
-    clear_print("Game Map:")
+    clear_print(" ")
+    print("Game Map:")
     print("+" + "-" * (cols * 2 - 1) + "+")
     for row in updated_map:
         print("| " + " ".join(row) + " |")
     print("+" + "-" * (cols * 2 - 1) + "+")
-
+    
     # Print the game status
     print("\nGame Status:")
-    print(f"You are playing as: {role}")
+    print(f"  You are playing as: {role}")
     print(f"  Freeze: {'No' if freeze else 'Yes'}")
     print(f"  Cman Caught Attempts: {attempts}")
     remaining_points = collected.count(0)
-    print(f"  Remaining Points: {remaining_points}\n")
-    print(f"  CMAN has {len(points) - remaining_points} points.")
+    print(f"  Remaining Points: {remaining_points}")
+    print(f"  CMAN has {len(points) - remaining_points} points.\n")
 
 
 def main():
