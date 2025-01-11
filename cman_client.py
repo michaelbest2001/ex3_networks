@@ -29,19 +29,16 @@ def handle_join(role):
     """Send a join request to the server."""
     message = bytes([0x00, role])  # 0x00 is the JOIN opcode, role is the second byte
     send_message(message)
-    print(f"Sent join request with role {role}")
 
 def handle_move(direction):
     """Send a player movement request to the server."""
     message = bytes([0x01, direction.value])  # 0x01 is the MOVE opcode, direction is the second byte
     send_message(message)
-    print(f"Sent move request with direction {direction.name}")
 
 def handle_quit():
     """Send a quit request to the server."""
     message = bytes([0x0F])  # 0x0F is the QUIT opcode
     send_message(message)
-    print("Sent quit request")
 
 def display_game_state(state):
     """Display the game state information."""
