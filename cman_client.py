@@ -125,11 +125,11 @@ def main():
     roles_dict = {'cman': 1, 'spirit': 2, 'watcher': 0}
     map_data = read_map('map.txt').split('\n')
     points = Game('map.txt').get_points()
-    try:
+    if role in roles_dict.keys():
         handle_join(roles_dict[role])  # Send join request
-    except Exception as e:
-        print(f"Error occurred: {e}")
-        return
+    else:
+        print(f"Invalid role: {role}")
+        exit(1)
     # Wait for server response
     while True:
         # Prepare the list of file descriptors to watch (socket and stdin)
@@ -174,8 +174,17 @@ def main():
                     elif error_code == 0x01:
                         print("Spirit cannot move yet, CMAN has to move first.")
                     elif error_code == 0x02:
-                        print("An error occurred while processing the request.")
+                        print("Invalid move, please try again.")
+                    elif error_code == 0x03:
+                        print("CMAN already taken.")
                         exit(1)
+                    elif error_code == 0x04:
+                        print("Spirit already taken.")
+                        exit(1)
+                    elif error_code == 0x05:
+                        print("Invalid role.")                        
+                        exit(1)
+                        
             
         keys = get_pressed_keys()
 
