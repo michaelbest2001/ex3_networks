@@ -29,6 +29,7 @@ def get_game_update(addr):
     # feeze is 0 if the player can send move requests, 1 otherwise
     freeze = (roles[clients[addr]] != Player.NONE) and game.can_move(clients[addr])
     points = game.get_points()
+
     # convert the points dict into bytes where each bit represents a point, 5 bytes for 40 points
     collected = [0] * 5
     # sort the points by their coordinates, lexigraphically

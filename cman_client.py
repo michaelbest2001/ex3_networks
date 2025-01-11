@@ -3,7 +3,7 @@ import time
 import sys
 import select
 from cman_utils import get_pressed_keys, clear_print, _flush_input  # Importing utils functions
-from cman_game import Player, Direction  # Assuming these classes are defined in game_logic.py
+from cman_game import Game, Player, Direction  # Assuming these classes are defined in game_logic.py
 from cman_game_map import read_map  # Importing read_map function from game_map.py
 # Constants
 TIMEOUT = 0.01
@@ -56,7 +56,7 @@ def display_game_state(state):
 
     print("\nPress a key to exit the game.")
     
-def update_and_print_map(map_data, freeze, c_coords, s_coords, attempts, collected):
+def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts, collected):
     """
     Updates the map with the current game state and prints it.
 
@@ -73,19 +73,14 @@ def update_and_print_map(map_data, freeze, c_coords, s_coords, attempts, collect
     print('collected', collected)
     # Update collected points
     rows, cols = len(updated_map), len(updated_map[0])
-    point_index = 0
-    points = []
+    
     for r in range(rows):
         for c in range(cols):
-            if updated_map[r][c] == POINT_CHAR:
-                points.append((r, c))
-                print(f"point at {r}, {c}")
-                point_index += 1
             if updated_map[r][c] in {CMAN_CHAR, SPIRIT_CHAR}:
                 updated_map[r][c] = FREE_CHAR
 
-    points = sorted(points)
-    for i, point in enumerate(points):
+    
+    for i, point in enumerate(sorted(points.keys())):
         if collected[i] == 1:
             updated_map[point[0]][point[1]] = ' '
 
@@ -129,6 +124,7 @@ def main():
     global role, game_active
     roles_dict = {'cman': 1, 'spirit': 2, 'watcher': 0}
     map_data = read_map('map.txt').split('\n')
+    points = Game('map.txt').get_points()
     try:
         handle_join(roles_dict[role])  # Send join request
     except Exception as e:
@@ -153,9 +149,14 @@ def main():
                     c_coords = (data[2], data[3])
                     s_coords = (data[4], data[5])
                     attempts = data[6]
-                    collected = [int(i) for i in f"{data[7]:08b}{data[8]:08b}{data[9]:08b}{data[10]:08b}{data[11]:08b}"]
+                    # unpack 5 bytes of collected to a list of 40 ints
+                    collected = []
+                    for i in range(7, 12):
+                        byte = data[i]
+                        for j in range(8):
+                            collected.append((byte >> j) & 1)
                     
-                    update_and_print_map(map_data, freeze, c_coords, s_coords, attempts, collected)
+                    update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts, collected)
                     break
                     
                 elif opcode == 0x8F:  # Game end (0x8F)
