@@ -24,8 +24,8 @@ spectators = []
 def get_game_update(addr):
     """Get the game update message for a client."""
     cords = game.get_current_players_coords()
-    c_coords = cords[Player.CMAN]
-    s_coords = cords[Player.SPIRIT]
+    c_coords = cords[Player.CMAN] if Player.CMAN in clients.values() else (0xFF, 0xFF)
+    s_coords = cords[Player.SPIRIT] if Player.SPIRIT in clients.values() else (0xFF, 0xFF)
     # feeze is 0 if the player can send move requests, 1 otherwise
     freeze = (roles[clients[addr]] != Player.NONE) and game.can_move(clients[addr])
     points = game.get_points()
@@ -66,12 +66,17 @@ def handle_join_request(client_addr, role):
         if role == 0 or roles[role] not in clients.values():
             clients[client_addr] = roles[role]
             print(f"Client {client_addr} joined as {roles[role]}")
-        else:
-            # Role already taken, send error message
+        elif role == 1 and Player.CMAN in clients.values():
+            # CMAN already taken, send error message
+            send_message(client_addr, get_game_update(client_addr))
+            send_message(client_addr, bytes([0xFF, 0x03]))
+        elif role == 2 and Player.SPIRIT in clients.values():
+            # SPIRIT already taken, send error message
+            send_message(client_addr, get_game_update(client_addr))
             send_message(client_addr, bytes([0xFF, 0x04]))
     else:
-        # Invalid role, send error message
-        send_message(client_addr, bytes([0xFF, 0x00]))
+        # error message
+        send_message(client_addr, bytes([0xFF, 0x05]))
         return
     # Send the game state update to the client
     send_message(client_addr, get_game_update(client_addr))
@@ -98,14 +103,22 @@ def handle_move_request(client_addr, direction):
     else:
         # send error message
         send_message(client_addr, bytes([0xFF, 0x02]))  # Error opcode, code 0x01 (invalid move)
+        print(f"invalid move by {client_addr}")
+    
     
 def handle_exit_request(client_addr):
     """Handles a client exit request."""
     if client_addr in clients:
         role = roles[clients[client_addr]]
+        
         if role == Player.CMAN or role == Player.SPIRIT:
-            game.declare_winner(Player.SPIRIT if role == Player.CMAN else Player.CMAN)
-            print(f"Client {client_addr} exited, winner: {role}")
+            if game.state == State.WAIT:
+                clients.pop(client_addr)
+                print(f"Client {client_addr} exited")
+                send_update_to_all()
+            else:
+                game.declare_winner(Player.SPIRIT if role == Player.CMAN else Player.CMAN)
+                print(f"Client {client_addr} exited, winner: {role}")
 
     else:
         send_message(client_addr, bytes([0xFF, 0x03]))  # Error opcode, code 0x03 (not in game)
@@ -164,6 +177,7 @@ def main():
             print(f"Game ended, winner: {winner}")
             c_score = MAX_ATTEMPTS - game.get_game_progress()[0]
             s_score = game.get_game_progress()[1]
+            send_update_to_all()
             send_message_to_all(bytes([0x8F, winner, s_score, c_score]))  # Game end message
             time.sleep(10)  # Wait for a few seconds before restarting
             clients.clear()
