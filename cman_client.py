@@ -6,7 +6,7 @@ from cman_utils import get_pressed_keys, clear_print, _flush_input  # Importing 
 from cman_game import Player, Direction  # Assuming these classes are defined in game_logic.py
 from cman_game_map import read_map  # Importing read_map function from game_map.py
 # Constants
-
+TIMEOUT = 0.01
 SERVER_PORT = 1337
 POINT_CHAR = 'P'
 FREE_CHAR = 'F'
@@ -138,7 +138,7 @@ def main():
     while True:
         # Prepare the list of file descriptors to watch (socket and stdin)
         
-        rlist, _, _ = select.select([client_socket], [], [], 0.1)  # 1 second timeout
+        rlist, _, _ = select.select([client_socket], [], [], TIMEOUT)  # 1 second timeout
         
         for ready in rlist:
             if ready == client_socket:

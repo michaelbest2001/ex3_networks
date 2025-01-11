@@ -7,7 +7,7 @@ from cman_game import Game, Player, Direction, State  # Assume game logic is in 
 # Constants
 SERVER_PORT = 1337
 SERVER_IP = '0.0.0.0'
-TIMEOUT = 10  # Timeout for select, adjust as needed
+TIMEOUT = 0.01  # Timeout for select, adjust as needed
 MAX_ATTEMPTS = 3
 WIN_SCORE = 32
 
@@ -162,7 +162,6 @@ def main():
             send_message_to_all(bytes([0x8F, winner, s_score, c_score]))  # Game end message
             time.sleep(10)  # Wait for a few seconds before restarting
             clients = {}
-            
             game.restart_game()  # Restart the game after a winner is declared
 
             send_message_to_all(bytes([0x80, 0x00]))  # Game restart
