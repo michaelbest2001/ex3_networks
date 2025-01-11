@@ -16,7 +16,7 @@ game = None
 
 server_socket = None  # Server socket for communication
 # List of clients and their roles
-clients = {None: None}
+clients = None
 roles = {0:Player.NONE, 1:Player.CMAN, 2:Player.SPIRIT}  # Keep track of CMAN and SPIRIT
 
 spectators = []
@@ -109,6 +109,7 @@ def handle_exit_request(client_addr):
 def main():
     global game
     global server_socket
+    global clients
     # UDP server socket setup
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind((SERVER_IP, SERVER_PORT))
