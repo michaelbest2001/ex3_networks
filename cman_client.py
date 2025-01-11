@@ -86,13 +86,10 @@ def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts,
     # Update player positions
     if c_coords != (0xFF, 0xFF):  # Check if Cman is active
         updated_map[c_coords[0]][c_coords[1]] = CMAN_CHAR
-    else:
-        #print('cman not active')
+
     if s_coords != (0xFF, 0xFF):  # Check if Spirit is active
         updated_map[s_coords[0]][s_coords[1]] = SPIRIT_CHAR
-    else:
-        #print('spirit not active')
-    
+
     # replace free space with ' '
     for i in range(len(updated_map)):
         updated_map[i] = [x if x != FREE_CHAR else ' ' for x in updated_map[i]]
