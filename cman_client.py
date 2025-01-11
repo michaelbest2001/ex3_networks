@@ -93,7 +93,7 @@ def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts,
     # Print the game status
     print("\nGame Status:")
     print(f"  You are playing as: {role}")
-    print(f"  Freeze: {'No' if freeze else 'Yes'}")
+    print(f"  Freeze: {'Yes' if freeze else 'No'}")
     print(f"  Cman Caught Attempts: {attempts}")
     remaining_points = collected.count(0)
     print(f"  Remaining Points: {remaining_points}")
