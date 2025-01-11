@@ -40,19 +40,6 @@ def handle_quit():
     message = bytes([0x0F])  # 0x0F is the QUIT opcode
     send_message(message)
 
-def display_game_state(state):
-    """Display the game state information."""
-    clear_print()
-    print("Game State Update:")
-    print(f"CMAN Coordinates: {state['cman_coords']}")
-    print(f"Spirit Coordinates: {state['spirit_coords']}")
-    print(f"Attempts: {state['attempts']}")
-    print(f"Collected: {state['collected']}")
-    # Display the game board
-    print("\nGame Board:")
-
-    print("\nPress a key to exit the game.")
-    
 def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts, collected):
     """
     Updates the map with the current game state and prints it.

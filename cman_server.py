@@ -113,9 +113,6 @@ def handle_move_request(client_addr, direction):
         send_message(client_addr, bytes([0xFF, 0x01]))
     
     elif game.apply_move(role, direction):
-        print("applyed move")
-        if game.state == State.START:
-            game.state = State.PLAY
         send_update_to_all()
         return 
 
