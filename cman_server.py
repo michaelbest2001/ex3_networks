@@ -63,23 +63,34 @@ def send_message_to_all(message):
 def handle_join_request(client_addr, role):
     """Handles a join request from a client."""
     if role in [0,1,2]:
-        if role == 0 or roles[role] not in clients.values():
+        if role == 0:
             clients[client_addr] = roles[role]
             print(f"Client {client_addr} joined as {roles[role]}")
-        elif role == 1 and Player.CMAN in clients.values():
-            # CMAN already taken, send error message
-            send_message(client_addr, get_game_update(client_addr))
-            send_message(client_addr, bytes([0xFF, 0x03]))
-        elif role == 2 and Player.SPIRIT in clients.values():
-            # SPIRIT already taken, send error message
-            send_message(client_addr, get_game_update(client_addr))
-            send_message(client_addr, bytes([0xFF, 0x04]))
+        if role == 1:
+            if Player.CMAN in clients.values():
+                # CMAN already taken, send error message
+                #send_message(client_addr, get_game_update(client_addr))
+                send_message(client_addr, bytes([0xFF, 0x03]))
+            else:
+                clients[client_addr] = roles[role]
+                print(f"Client {client_addr} joined as {roles[role]}")
+                send_update_to_all()
+        if role == 2:
+            if Player.SPIRIT in clients.values():
+                # SPIRIT already taken, send error message
+                #send_message(client_addr, get_game_update(client_addr))
+                send_message(client_addr, bytes([0xFF, 0x04]))
+            else:
+                clients[client_addr] = roles[role]
+                print(f"Client {client_addr} joined as {roles[role]}")
+                send_update_to_all()
     else:
         # error message
         send_message(client_addr, bytes([0xFF, 0x05]))
         return
     # Send the game state update to the client
-    send_message(client_addr, get_game_update(client_addr))
+
+    
     
 
 def handle_move_request(client_addr, direction):
