@@ -80,10 +80,14 @@ def handle_join_request(client_addr, role):
 def handle_move_request(client_addr, direction):
     """Handle a move request from a client."""
     role = clients[client_addr]
-    if role == 'watcher' or not game.can_move(role):
-        print("cant move")
-        send_message(client_addr, bytes([0xFF, 0x02]))  # Error opcode, code 0x02 (cannot move)
-        return
+  
+
+    if game.state == State.WAIT:
+        print("game is waiting")
+        send_message(client_addr, bytes([0xFF, 0x00]))  # Error opcode, code 0x02 (waiting for players)
+    elif game.state == State.START and roles[clients[client_addr]] == Player.SPIRIT:
+        print("spirit cant move")
+        send_message(client_addr, bytes([0xFF, 0x01]))
     
     elif game.apply_move(role, direction):
         print("applyed move")
@@ -93,7 +97,7 @@ def handle_move_request(client_addr, direction):
         return 
     else:
         # send error message
-        send_message(client_addr, bytes([0xFF, 0x01]))  # Error opcode, code 0x01 (invalid move)
+        send_message(client_addr, bytes([0xFF, 0x02]))  # Error opcode, code 0x01 (invalid move)
     
 def handle_exit_request(client_addr):
     """Handles a client exit request."""
@@ -162,7 +166,7 @@ def main():
             s_score = game.get_game_progress()[1]
             send_message_to_all(bytes([0x8F, winner, s_score, c_score]))  # Game end message
             time.sleep(10)  # Wait for a few seconds before restarting
-            clients = {}
+            clients.clear()
             game.restart_game()  # Restart the game after a winner is declared
 
             send_message_to_all(bytes([0x80, 0x00]))  # Game restart
