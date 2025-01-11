@@ -84,6 +84,12 @@ def handle_join_request(client_addr, role):
                 clients[client_addr] = roles[role]
                 print(f"Client {client_addr} joined as {roles[role]}")
                 send_update_to_all()
+
+    if Player.CMAN in clients.values() and Player.SPIRIT in clients.values():
+            # Start the game if both roles are taken
+            if game.state == State.WAIT:
+                game.state = State.START
+                print("start the game")
     else:
         # error message
         send_message(client_addr, bytes([0xFF, 0x05]))
@@ -128,6 +134,7 @@ def handle_exit_request(client_addr):
                 print(f"Client {client_addr} exited")
                 send_update_to_all()
             else:
+                clients.pop(client_addr)
                 game.declare_winner(Player.SPIRIT if role == Player.CMAN else Player.CMAN)
                 print(f"Client {client_addr} exited, winner: {role}")
 
@@ -173,11 +180,7 @@ def main():
                 elif opcode == 0x0F:  # Quit request
                     handle_exit_request(client_addr)
         
-        if Player.CMAN in clients.values() and Player.SPIRIT in clients.values():
-            # Start the game if both roles are taken
-            if game.state == State.WAIT:
-                game.state = State.START
-                print("start the game")
+
         # Continue to check for clients and update the game state
         if game.state != previous_state:
             print("state changed")
