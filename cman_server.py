@@ -27,7 +27,7 @@ def get_game_update(addr):
     c_coords = cords[Player.CMAN] if Player.CMAN in clients.values() else (0xFF, 0xFF)
     s_coords = cords[Player.SPIRIT] if Player.SPIRIT in clients.values() else (0xFF, 0xFF)
     # feeze is 0 if the player can send move requests, 1 otherwise
-    freeze = (clients[addr] == Player.None) or (not game.can_move(clients[addr]))
+    freeze = (clients[addr] == Player.NONE) or (not game.can_move(clients[addr]))
     points = game.get_points()
 
     # convert the points dict into bytes where each bit represents a point, 5 bytes for 40 points
