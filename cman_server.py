@@ -134,7 +134,7 @@ def handle_exit_request(client_addr):
                 clients.pop(client_addr)
                 print(f"Client {client_addr} exited")
                 send_update_to_all()
-            else:
+            elif Player.CMAN in clients.values() and Player.SPIRIT in clients.values():
                 clients.pop(client_addr)
                 winner = Player.SPIRIT if role == Player.CMAN else Player.CMAN
                 game.declare_winner(winner)
@@ -190,11 +190,12 @@ def main():
         # If game ends
         if game.state == State.WIN:
             winner = game.get_winner()
+            winner_byte = 1 if winner == Player.CMAN else 2
             print(f"Game ended, winner: {winner}")
             c_score = MAX_ATTEMPTS - game.get_game_progress()[0]
             s_score = game.get_game_progress()[1]
             send_update_to_all()
-            send_message_to_all(bytes([0x8F, winner, s_score, c_score]))  # Game end message
+            send_message_to_all(bytes([0x8F, winner_byte, s_score, c_score]))  # Game end message
             time.sleep(10)  # Wait for a few seconds before restarting
             clients.clear()
             game.restart_game()  # Restart the game after a winner is declared
