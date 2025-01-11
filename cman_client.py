@@ -121,11 +121,9 @@ def main():
         for ready in rlist:
             if ready == client_socket:
                 # Receive a message from the server
-                adress_server = addr
+            
                 data, addr = client_socket.recvfrom(1024)
-                if addr != (addr_server, SERVER_PORT):
-                    print(f"Received message from unknown address {addr}. Ignoring.")
-                    continue
+                
                 opcode = data[0]
                 #print(f"Received message with opcode {opcode}")
                 
