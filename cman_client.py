@@ -164,11 +164,12 @@ def main():
                     print(f"Game Over! The winner is {winner}")
                     print(f"CMAN Score: {data[2]}")
                     print(f"Spirit Score: {data[3]}")
-                    game_active = False
+                    exit(0)
                     break
               
                 elif opcode == 0xFF:
                     print("An error occurred.")
+                    exit(1)
             
         keys = get_pressed_keys()
 
@@ -176,7 +177,7 @@ def main():
             if 'q' in keys:
                 print("Quitting game.")
                 handle_quit()
-                break
+                exit(0)
             elif 'w' in keys:
                 print("Moving up.")
                 handle_move(Direction.UP)
