@@ -185,7 +185,7 @@ def main():
                 handle_quit()
                 exit(0)
             if role != 'watcher':
-                elif 'w' in keys:
+                if 'w' in keys:
                     print("Moving up.")
                     handle_move(Direction.UP)
                 elif 'a' in keys:
