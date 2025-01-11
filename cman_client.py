@@ -95,8 +95,8 @@ def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts,
   
     
     # Print the updated map
-    clear_print()
-    print("Game Map:")
+    
+    clear_print("Game Map:")
     print("+" + "-" * (cols * 2 - 1) + "+")
     for row in updated_map:
         print("| " + " ".join(row) + " |")
@@ -109,6 +109,7 @@ def update_and_print_map(map_data, points, freeze, c_coords, s_coords, attempts,
     print(f"  Cman Caught Attempts: {attempts}")
     remaining_points = collected.count(0)
     print(f"  Remaining Points: {remaining_points}\n")
+    print(f"  CMAN has {len(points) - remaining_points} points.")
 
 
 def main():
