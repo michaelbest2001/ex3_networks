@@ -121,6 +121,7 @@ def main():
         for ready in rlist:
             if ready == client_socket:
                 # Receive a message from the server
+                adress_server = addr
                 data, addr = client_socket.recvfrom(1024)
                 if addr != (addr_server, SERVER_PORT):
                     print(f"Received message from unknown address {addr}. Ignoring.")
@@ -194,7 +195,7 @@ if __name__ == "__main__":
     # get args from command line
     try :
         role = sys.argv[1]
-        addr_server = sys.argv[2]
+        addr = sys.argv[2]
     except ValueError:
         print("Invalid command line arguments. Exiting.")
         sys.exit(1)
