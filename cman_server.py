@@ -158,7 +158,7 @@ def main():
         # Use select to handle multiple clients without blocking
         previous_state = game.state
         readable, _, _ = select.select([server_socket], [], [], TIMEOUT)
-        sleep(0.005)
+        time.sleep(0.003)
         send_update_to_all()
         
         for sock in readable:
