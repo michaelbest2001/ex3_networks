@@ -53,7 +53,6 @@ def send_update_to_all():
 def send_message(client_addr, message):
     """Send a message to a client."""
     server_socket.sendto(message, client_addr)
-    print(f"Sent message to {client_addr}")
     
 def send_message_to_all(message):
     """Send a message to all clients."""
@@ -106,10 +105,8 @@ def handle_move_request(client_addr, direction):
     role = clients[client_addr]
 
     if game.state == State.WAIT:
-        print("game is waiting")
         send_message(client_addr, bytes([0xFF, 0x00]))  # Error opcode, code 0x02 (waiting for players)
     elif game.state == State.START and roles[clients[client_addr]] == Player.SPIRIT:
-        print("spirit cant move")
         send_message(client_addr, bytes([0xFF, 0x01]))
     
     elif game.apply_move(role, direction):
@@ -122,7 +119,6 @@ def handle_exit_request(client_addr):
     """Handles a client exit request."""
     if client_addr in clients.keys():
         role = clients[client_addr]
-        print(f"in exit request, role: {role}")
 
         if role == Player.CMAN or role == Player.SPIRIT:
             if game.state == State.WAIT:
@@ -171,11 +167,10 @@ def main():
                     continue
                 
                 opcode = data[0]
-                print(f"Received message with opcode {opcode} from {client_addr}")
+                
 
                 if opcode == 0x00:  # Join request
                     role = data[1]  # Role byte
-                    print(f"Join request from {client_addr} with role {role}")
                     handle_join_request(client_addr, role)
                 
                 elif opcode == 0x01:  # Player move request
@@ -189,7 +184,6 @@ def main():
 
         # Continue to check for clients and update the game state
         if game.state != previous_state:
-            print("state changed")
             send_update_to_all()  # Game state update
         # If game ends
         if game.state == State.WIN:
