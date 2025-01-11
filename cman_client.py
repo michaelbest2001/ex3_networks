@@ -168,8 +168,14 @@ def main():
                     break
               
                 elif opcode == 0xFF:
-                    print("An error occurred.")
-                    exit(1)
+                    error_code = data[1]
+                    if error_code == 0x00:
+                        print("waiting for players")
+                    elif error_code == 0x01:
+                        print("Spirit cannot move yet, CMAN has to move first.")
+                    elif error_code == 0x02:
+                        print("An error occurred while processing the request.")
+                        exit(1)
             
         keys = get_pressed_keys()
 
@@ -178,19 +184,21 @@ def main():
                 print("Quitting game.")
                 handle_quit()
                 exit(0)
-            elif 'w' in keys:
-                print("Moving up.")
-                handle_move(Direction.UP)
-            elif 'a' in keys:
-                print("Moving left.")
-                handle_move(Direction.LEFT)
-            elif 's' in keys:
-                print("Moving down.")
-                handle_move(Direction.DOWN)
-            elif 'd' in keys:
-                print("Moving right.")
-                handle_move(Direction.RIGHT)
-                
+            if role != 'watcher':
+                elif 'w' in keys:
+                    print("Moving up.")
+                    handle_move(Direction.UP)
+                elif 'a' in keys:
+                    print("Moving left.")
+                    handle_move(Direction.LEFT)
+                elif 's' in keys:
+                    print("Moving down.")
+                    handle_move(Direction.DOWN)
+                elif 'd' in keys:
+                    print("Moving right.")
+                    handle_move(Direction.RIGHT)
+            else:
+                print("Watcher cannot move.")    
 
     print("Game ended. Closing client.")
 
